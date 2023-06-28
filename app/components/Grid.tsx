@@ -1,16 +1,24 @@
-import Row from "./Row"
+"use client";
+import { useWordly } from "../context/WordlyContext";
+import Row from "./Row";
 
 const Grid = () => {
+  const { word, board } = useWordly();
+
   return (
     <div>
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-    </div>
-  )
-}
+      {board.map((row, i)=> (
+        <Row key={i} rowData={row}/>
+      ))}
 
-export default Grid
+      {/* <Row />
+      <Row />
+      <Row />
+      <Row />
+      <Row />
+      <Row /> */}
+    </div>
+  );
+};
+
+export default Grid;

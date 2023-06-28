@@ -1,8 +1,6 @@
 import Navbar from "./components/Navbar";
+import { WordlyContextProvider } from "./context/WordlyContext";
 import "./globals.css";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Create Next App",
@@ -16,9 +14,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Navbar />
-        <div>{children}</div>
+      <body className="border-black border-2">
+        <WordlyContextProvider>
+          <Navbar />
+          <div>{children}</div>
+        </WordlyContextProvider>
       </body>
     </html>
   );
