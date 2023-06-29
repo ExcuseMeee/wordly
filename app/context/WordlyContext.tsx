@@ -3,7 +3,12 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 type ContextTypes = {
   word: string;
-  board: string[][];
+  board: CellData[][];
+};
+
+export type CellData = {
+  letter: string;
+  state: "None" | "Incorrect" | "Close" | "Correct";
 };
 
 const WordlyContext = createContext<ContextTypes>(null!);
@@ -23,7 +28,6 @@ export const WordlyContextProvider = ({
         setWord(word);
       });
   }, []);
-
   useEffect(() => {
     document.addEventListener("keyup", keyHandler);
 
@@ -36,18 +40,22 @@ export const WordlyContextProvider = ({
     if (event.key === "Backspace") {
       deleteLetter();
     } else if (event.key === "Enter") {
-      console.log("enter");
-    } else if(/^[A-Za-z]$/.test(event.key)){
-      addLetter(event.key)
-    }else {
-      console.log("invalid keystroke", event.key)
+      submitGuess();
+    } else if (/^[A-Za-z]$/.test(event.key)) {
+      addLetter(event.key);
+    } else {
+      console.log("invalid keystroke", event.key);
     }
   }
 
   function updateBoard(letter: string, turn: number, position: number) {
-    // console.log("updating", turn, position);
-    const tempBoard = board.map((row) => [...row]);
-    tempBoard[turn][position] = letter;
+    const tempBoard: CellData[][] = board.map((row) =>
+      row.map((cell) => ({ ...cell }))
+    );
+    tempBoard[turn][position] = {
+      letter: letter,
+      state: tempBoard[turn][position].state,
+    };
     setBoard(tempBoard);
   }
 
@@ -58,20 +66,54 @@ export const WordlyContextProvider = ({
   }
 
   function addLetter(key: string) {
-    if (currentPosition === 5) return;
+    if (currentPosition === 5 || currentTurn === 6) return;
     updateBoard(key, currentTurn, currentPosition);
     setCurrentPosition((currentPosition) => currentPosition + 1);
   }
 
+  function submitGuess() {
+    // todo: check if submitted word exists in wordbank. use api post route?
+    if (currentPosition !== 5) return;
+    const tempBoard: CellData[][] = board.map((row) =>
+      row.map((cell) => ({ ...cell }))
+    );
+    let currentGuess = board.at(currentTurn)!;
+    const result = check(currentGuess, word);
+    tempBoard[currentTurn] = result;
+    setBoard(tempBoard);
+    setCurrentTurn((currentTurn) => currentTurn + 1);
+    setCurrentPosition(0);
+  }
+
+  function check(guess: CellData[], word: string) {
+    let returnArr: CellData[] = [];
+    let wordArr: string[] = word.trim().toLowerCase().split("");
+    guess.forEach((cell, i) => {
+      const guessLetter = cell.letter.toLowerCase();
+      const wordLetter = wordArr.at(i);
+      returnArr.push({
+        letter: guessLetter,
+        state:
+          guessLetter === wordLetter
+            ? "Correct"
+            : wordArr.includes(guessLetter)
+            ? "Close"
+            : "Incorrect",
+      });
+    });
+    return returnArr;
+  }
+
   const [word, setWord] = useState("");
-  const [board, setBoard] = useState<string[][]>([
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-  ]);
+  const [board, setBoard] = useState(
+    Array<CellData[]>(6).fill(
+      Array<CellData>(5).fill({
+        letter: "",
+        state: "None",
+      })
+    )
+  );
+
   const [currentTurn, setCurrentTurn] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(0);
 

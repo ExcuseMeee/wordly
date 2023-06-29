@@ -1,13 +1,14 @@
+import { CellData } from "../context/WordlyContext";
 import Cell from "./Cell";
 type ComponentProps = {
-  rowData: string[];
+  rowData: CellData[];
 };
 
 const Row = ({ rowData }: ComponentProps) => {
   return (
     <div className="flex">
-      {rowData.map((letter, i)=>(
-        <Cell key={i} position={i} letter={letter} />
+      {rowData.map((cellData, i)=>(
+        <Cell key={i} position={i} cellData={cellData} />
       ))}
       {/* <Cell position={0} />
       <Cell position={1} />
