@@ -71,13 +71,16 @@ export const WordlyContextProvider = ({
     setCurrentPosition((currentPosition) => currentPosition + 1);
   }
 
-  function submitGuess() {
-    // todo: check if submitted word exists in wordbank. use api post route?
+  async function submitGuess() {
     if (currentPosition !== 5) return;
+    let currentGuess = board.at(currentTurn)!;
+    if (!(await wordExists(currentGuess))) {
+      console.log("word dne");
+      return;
+    }
     const tempBoard: CellData[][] = board.map((row) =>
       row.map((cell) => ({ ...cell }))
     );
-    let currentGuess = board.at(currentTurn)!;
     const result = check(currentGuess, word);
     tempBoard[currentTurn] = result;
     setBoard(tempBoard);
@@ -102,6 +105,20 @@ export const WordlyContextProvider = ({
       });
     });
     return returnArr;
+  }
+
+  async function wordExists(guess: CellData[]): Promise<boolean> {
+    let guessString: string = guess.map((cell) => cell.letter).join("");
+    const res = await fetch("/api", {
+      method: "POST",
+      body: guessString,
+    });
+    if (res.status === 500) {
+      console.log("Word search failed");
+      return false;
+    }
+    const doesExist: boolean = await res.json();
+    return doesExist;
   }
 
   const [word, setWord] = useState("");
