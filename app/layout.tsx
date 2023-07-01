@@ -14,7 +14,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="border-black border-2">
+      <body>
         <WordlyContextProvider>
           <Navbar />
           <div>{children}</div>

@@ -6,17 +6,12 @@ const Grid = () => {
   const { word, board } = useWordly();
 
   return (
-    <div>
-      {board.map((row, i)=> (
-        <Row key={i} rowData={row}/>
-      ))}
-
-      {/* <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row /> */}
+    <div className="flex justify-center border border-black">
+      <div>
+        {board.map((row, i) => (
+          <Row key={i} rowData={row} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 type ContextTypes = {
   word: string;
   board: CellData[][];
+  addLetter: Function;
 };
 
 export type CellData = {
@@ -90,7 +91,7 @@ export const WordlyContextProvider = ({
 
   function check(guess: CellData[], word: string) {
     let returnArr: CellData[] = [];
-    let wordArr: string[] = word.trim().toLowerCase().split("");
+    const wordArr: string[] = word.trim().toLowerCase().split("");
     guess.forEach((cell, i) => {
       const guessLetter = cell.letter.toLowerCase();
       const wordLetter = wordArr.at(i);
@@ -133,9 +134,10 @@ export const WordlyContextProvider = ({
 
   const [currentTurn, setCurrentTurn] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(0);
+  const [usedLetters, setUsedLetters] = useState()
 
   return (
-    <WordlyContext.Provider value={{ word, board }}>
+    <WordlyContext.Provider value={{ word, board, addLetter }}>
       {children}
     </WordlyContext.Provider>
   );
