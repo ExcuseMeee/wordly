@@ -1,16 +1,19 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, MutableRefObject } from "react";
 
 type ContextTypes = {
   word: string;
   board: CellData[][];
   addLetter: Function;
+  usedLetters: MutableRefObject<Map<string, CellState>>;
 };
 
 export type CellData = {
   letter: string;
-  state: "None" | "Incorrect" | "Close" | "Correct";
+  state: CellState;
 };
+
+type CellState = "None" | "Incorrect" | "Close" | "Correct";
 
 const WordlyContext = createContext<ContextTypes>(null!);
 
@@ -95,15 +98,17 @@ export const WordlyContextProvider = ({
     guess.forEach((cell, i) => {
       const guessLetter = cell.letter.toLowerCase();
       const wordLetter = wordArr.at(i);
+      const cellState: CellState =
+        guessLetter === wordLetter
+          ? "Correct"
+          : wordArr.includes(guessLetter)
+          ? "Close"
+          : "Incorrect";
       returnArr.push({
         letter: guessLetter,
-        state:
-          guessLetter === wordLetter
-            ? "Correct"
-            : wordArr.includes(guessLetter)
-            ? "Close"
-            : "Incorrect",
+        state: cellState,
       });
+      updateUsedLetters(guessLetter, cellState);
     });
     return returnArr;
   }
@@ -122,6 +127,11 @@ export const WordlyContextProvider = ({
     return doesExist;
   }
 
+  function updateUsedLetters(letter: string, cellState: CellState) {
+    if (usedLetters.current.get(letter) === "Correct") return;
+    usedLetters.current.set(letter, cellState);
+  }
+
   const [word, setWord] = useState("");
   const [board, setBoard] = useState(
     Array<CellData[]>(6).fill(
@@ -134,10 +144,10 @@ export const WordlyContextProvider = ({
 
   const [currentTurn, setCurrentTurn] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(0);
-  const [usedLetters, setUsedLetters] = useState()
+  const usedLetters = useRef<Map<string, CellState>>(new Map());
 
   return (
-    <WordlyContext.Provider value={{ word, board, addLetter }}>
+    <WordlyContext.Provider value={{ word, board, addLetter, usedLetters }}>
       {children}
     </WordlyContext.Provider>
   );

@@ -3,7 +3,7 @@ import { useWordly } from "../context/WordlyContext";
 import Row from "./Row";
 
 const Grid = () => {
-  const { word, board } = useWordly();
+  const { board } = useWordly();
 
   return (
     <div className="flex justify-center border border-black">

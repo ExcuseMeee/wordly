@@ -1,4 +1,3 @@
-"use client";
 import KeyBoardRow from "./KeyBoardRow";
 
 const Keyboard = () => {
