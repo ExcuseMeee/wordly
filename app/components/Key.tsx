@@ -20,7 +20,7 @@ const Key = ({ key_ }: ComponentProps) => {
 
   return (
     <div
-      className={`border w-12 h-12 hover:cursor-pointer flex justify-center items-center ${keyColor}`}
+      className={`border w-12 h-12 hover:cursor-pointer flex justify-center items-center select-none mx-0.5 ${keyColor}`}
       onClick={() => {
         addLetter(key_);
       }}

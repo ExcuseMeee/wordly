@@ -1,11 +1,20 @@
 "use client";
-import { createContext, useContext, useEffect, useRef, useState, MutableRefObject } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  MutableRefObject,
+} from "react";
 
 type ContextTypes = {
   word: string;
   board: CellData[][];
   addLetter: Function;
   usedLetters: MutableRefObject<Map<string, CellState>>;
+  submitGuess: Function;
+  deleteLetter: Function;
 };
 
 export type CellData = {
@@ -22,6 +31,21 @@ export const WordlyContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const [word, setWord] = useState("");
+  const [board, setBoard] = useState(
+    Array<CellData[]>(6).fill(
+      Array<CellData>(5).fill({
+        letter: "",
+        state: "None",
+      })
+    )
+  );
+  const [currentTurn, setCurrentTurn] = useState(0);
+  const [currentPosition, setCurrentPosition] = useState(0);
+  const [solved, setSolved] = useState(false);
+  const usedLetters = useRef<Map<string, CellState>>(new Map());
+
+  // fetch word on first render
   useEffect(() => {
     fetch("/api")
       .then((res) => {
@@ -32,6 +56,8 @@ export const WordlyContextProvider = ({
         setWord(word);
       });
   }, []);
+
+  // track and handle keystrokes
   useEffect(() => {
     document.addEventListener("keyup", keyHandler);
 
@@ -39,7 +65,6 @@ export const WordlyContextProvider = ({
       document.removeEventListener("keyup", keyHandler);
     };
   }, [keyHandler]);
-
   function keyHandler(event: KeyboardEvent) {
     if (event.key === "Backspace") {
       deleteLetter();
@@ -52,6 +77,18 @@ export const WordlyContextProvider = ({
     }
   }
 
+  // win or lose check
+  useEffect(() => {
+    if (currentTurn > 5 && !solved) {
+      console.log("wordly not solved");
+      resetWordly();
+    } else if (solved) {
+      console.log("wordly solved");
+      resetWordly();
+    }
+  }, [solved, currentTurn]);
+
+  // ----------------------GAMEBOARD UPDATING----------------------
   function updateBoard(letter: string, turn: number, position: number) {
     const tempBoard: CellData[][] = board.map((row) =>
       row.map((cell) => ({ ...cell }))
@@ -62,19 +99,45 @@ export const WordlyContextProvider = ({
     };
     setBoard(tempBoard);
   }
-
   function deleteLetter() {
     if (currentPosition === 0) return;
     updateBoard("", currentTurn, currentPosition - 1);
     setCurrentPosition((currentPosition) => currentPosition - 1);
   }
-
   function addLetter(key: string) {
     if (currentPosition === 5 || currentTurn === 6) return;
     updateBoard(key, currentTurn, currentPosition);
     setCurrentPosition((currentPosition) => currentPosition + 1);
   }
+  function updateUsedLetters(letter: string, cellState: CellState) {
+    if (usedLetters.current.get(letter) === "Correct") return;
+    usedLetters.current.set(letter, cellState);
+  }
+  function resetWordly() {
+    console.log("resetting...");
+    fetch("/api")
+      .then((res) => {
+        return res.json();
+      })
+      .then((word: string) => {
+        console.log(word);
+        setWord(word);
+      });
+    setBoard(
+      Array<CellData[]>(6).fill(
+        Array<CellData>(5).fill({
+          letter: "",
+          state: "None",
+        })
+      )
+    );
+    setCurrentPosition(0);
+    setCurrentTurn(0);
+    usedLetters.current.clear();
+    setSolved(false);
+  }
 
+  // ----------------------WORD CHECKING----------------------
   async function submitGuess() {
     if (currentPosition !== 5) return;
     let currentGuess = board.at(currentTurn)!;
@@ -85,14 +148,18 @@ export const WordlyContextProvider = ({
     const tempBoard: CellData[][] = board.map((row) =>
       row.map((cell) => ({ ...cell }))
     );
-    const result = check(currentGuess, word);
+    const { returnArr: result, solved } = check(currentGuess, word);
     tempBoard[currentTurn] = result;
     setBoard(tempBoard);
     setCurrentTurn((currentTurn) => currentTurn + 1);
     setCurrentPosition(0);
+    setSolved(solved);
   }
-
-  function check(guess: CellData[], word: string) {
+  function check(
+    guess: CellData[],
+    word: string
+  ): { returnArr: CellData[]; solved: boolean } {
+    let solved = true;
     let returnArr: CellData[] = [];
     const wordArr: string[] = word.trim().toLowerCase().split("");
     guess.forEach((cell, i) => {
@@ -104,15 +171,17 @@ export const WordlyContextProvider = ({
           : wordArr.includes(guessLetter)
           ? "Close"
           : "Incorrect";
+
       returnArr.push({
         letter: guessLetter,
         state: cellState,
       });
-      updateUsedLetters(guessLetter, cellState);
-    });
-    return returnArr;
-  }
 
+      updateUsedLetters(guessLetter, cellState);
+      if (guessLetter !== wordLetter) solved = false;
+    });
+    return { returnArr, solved };
+  }
   async function wordExists(guess: CellData[]): Promise<boolean> {
     let guessString: string = guess.map((cell) => cell.letter).join("");
     const res = await fetch("/api", {
@@ -127,27 +196,11 @@ export const WordlyContextProvider = ({
     return doesExist;
   }
 
-  function updateUsedLetters(letter: string, cellState: CellState) {
-    if (usedLetters.current.get(letter) === "Correct") return;
-    usedLetters.current.set(letter, cellState);
-  }
-
-  const [word, setWord] = useState("");
-  const [board, setBoard] = useState(
-    Array<CellData[]>(6).fill(
-      Array<CellData>(5).fill({
-        letter: "",
-        state: "None",
-      })
-    )
-  );
-
-  const [currentTurn, setCurrentTurn] = useState(0);
-  const [currentPosition, setCurrentPosition] = useState(0);
-  const usedLetters = useRef<Map<string, CellState>>(new Map());
 
   return (
-    <WordlyContext.Provider value={{ word, board, addLetter, usedLetters }}>
+    <WordlyContext.Provider
+      value={{ word, board, addLetter, usedLetters, submitGuess, deleteLetter }}
+    >
       {children}
     </WordlyContext.Provider>
   );

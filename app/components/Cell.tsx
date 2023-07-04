@@ -16,7 +16,7 @@ const Cell = ({ cellData }: ComponentProps) => {
 
   return (
     <div
-      className={`border w-14 h-14 m-0.5 flex justify-center items-center font-bold ${cellColor}`}
+      className={`border w-14 h-14 m-0.5 flex justify-center items-center font-bold select-none ${cellColor}`}
     >
       {cellData.letter.toUpperCase()}
     </div>
