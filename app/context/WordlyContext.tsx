@@ -15,6 +15,8 @@ type ContextTypes = {
   usedLetters: MutableRefObject<Map<string, CellState>>;
   submitGuess: Function;
   deleteLetter: Function;
+  gameFinished: boolean;
+  resetWordly: Function;
 };
 
 export type CellData = {
@@ -43,6 +45,7 @@ export const WordlyContextProvider = ({
   const [currentTurn, setCurrentTurn] = useState(0);
   const [currentPosition, setCurrentPosition] = useState(0);
   const [solved, setSolved] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false);
   const usedLetters = useRef<Map<string, CellState>>(new Map());
 
   // fetch word on first render
@@ -81,10 +84,12 @@ export const WordlyContextProvider = ({
   useEffect(() => {
     if (currentTurn > 5 && !solved) {
       console.log("wordly not solved");
-      resetWordly();
+      setGameFinished(true);
+      // resetWordly();
     } else if (solved) {
       console.log("wordly solved");
-      resetWordly();
+      setGameFinished(true);
+      // resetWordly();
     }
   }, [solved, currentTurn]);
 
@@ -123,6 +128,9 @@ export const WordlyContextProvider = ({
         console.log(word);
         setWord(word);
       });
+    resetStates();
+  }
+  function resetStates() {
     setBoard(
       Array<CellData[]>(6).fill(
         Array<CellData>(5).fill({
@@ -135,6 +143,7 @@ export const WordlyContextProvider = ({
     setCurrentTurn(0);
     usedLetters.current.clear();
     setSolved(false);
+    setGameFinished(false);
   }
 
   // ----------------------WORD CHECKING----------------------
@@ -196,10 +205,18 @@ export const WordlyContextProvider = ({
     return doesExist;
   }
 
-
   return (
     <WordlyContext.Provider
-      value={{ word, board, addLetter, usedLetters, submitGuess, deleteLetter }}
+      value={{
+        word,
+        board,
+        addLetter,
+        usedLetters,
+        submitGuess,
+        deleteLetter,
+        gameFinished,
+        resetWordly,
+      }}
     >
       {children}
     </WordlyContext.Provider>

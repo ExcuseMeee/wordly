@@ -1,12 +1,17 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useWordly } from "../context/WordlyContext";
 import Row from "./Row";
 
 const Grid = () => {
-  const { board } = useWordly();
+  const { board, gameFinished, resetWordly } = useWordly();
   const modalRef = useRef<HTMLDialogElement>(null);
-  // modalRef.current?.showModal();
+  useEffect(() => {
+    console.log("ran");
+    if (gameFinished) {
+      modalRef.current?.showModal();
+    }
+  }, [gameFinished]);
 
   return (
     <div className="flex justify-center border border-black">
@@ -15,7 +20,11 @@ const Grid = () => {
           <Row key={i} rowData={row} />
         ))}
       </div>
-      <dialog ref={modalRef}>
+      <dialog
+        ref={modalRef}
+        className="focus:outline-none"
+        onClose={() => resetWordly()}
+      >
         TEST
       </dialog>
     </div>
