@@ -2,14 +2,16 @@
 import { useEffect, useRef } from "react";
 import { useWordly } from "../context/WordlyContext";
 import Row from "./Row";
+import GameOver from "./GameOver";
 
 const Grid = () => {
-  const { board, gameFinished, resetWordly } = useWordly();
+  const { board, gameFinished, resetWordly, setModalOpen } = useWordly();
   const modalRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
     console.log("ran");
     if (gameFinished) {
       modalRef.current?.showModal();
+      setModalOpen(true);
     }
   }, [gameFinished]);
 
@@ -25,7 +27,7 @@ const Grid = () => {
         className="focus:outline-none"
         onClose={() => resetWordly()}
       >
-        TEST
+        <GameOver modalRef={modalRef} />
       </dialog>
     </div>
   );

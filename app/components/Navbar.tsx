@@ -1,9 +1,13 @@
 "use client";
 
 import { useRef } from "react";
+import Settings from "./Settings";
+import { useWordly } from "../context/WordlyContext";
 
 const Navbar = () => {
   const modalRef = useRef<HTMLDialogElement>(null);
+
+  const { setModalOpen } = useWordly();
 
   return (
     <>
@@ -15,14 +19,21 @@ const Navbar = () => {
         <div className="col-span-1">
           <div
             className="flex justify-center hover:cursor-pointer"
-            onClick={() => modalRef.current?.showModal()}
+            onClick={() => {
+              modalRef.current?.showModal();
+              setModalOpen(true);
+            }}
           >
             Settings
           </div>
         </div>
       </nav>
-      <dialog ref={modalRef} className="focus:outline-none">
-        SETTINGS
+      <dialog
+        ref={modalRef}
+        className="focus:outline-none"
+        onClose={() => setModalOpen(false)}
+      >
+        <Settings modalRef={modalRef} />
       </dialog>
     </>
   );

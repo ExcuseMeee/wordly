@@ -17,6 +17,8 @@ type ContextTypes = {
   deleteLetter: Function;
   gameFinished: boolean;
   resetWordly: Function;
+  solved: boolean;
+  setModalOpen: Function;
 };
 
 export type CellData = {
@@ -46,6 +48,7 @@ export const WordlyContextProvider = ({
   const [currentPosition, setCurrentPosition] = useState(0);
   const [solved, setSolved] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const usedLetters = useRef<Map<string, CellState>>(new Map());
 
   // fetch word on first render
@@ -69,6 +72,7 @@ export const WordlyContextProvider = ({
     };
   }, [keyHandler]);
   function keyHandler(event: KeyboardEvent) {
+    if (modalOpen) return;
     if (event.key === "Backspace") {
       deleteLetter();
     } else if (event.key === "Enter") {
@@ -144,6 +148,7 @@ export const WordlyContextProvider = ({
     usedLetters.current.clear();
     setSolved(false);
     setGameFinished(false);
+    setModalOpen(false);
   }
 
   // ----------------------WORD CHECKING----------------------
@@ -216,6 +221,8 @@ export const WordlyContextProvider = ({
         deleteLetter,
         gameFinished,
         resetWordly,
+        solved,
+        setModalOpen,
       }}
     >
       {children}
