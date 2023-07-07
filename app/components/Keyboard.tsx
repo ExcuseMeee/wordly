@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useWordly } from "../context/WordlyContext";
 import KeyBoardRow from "./KeyBoardRow";
 
@@ -10,12 +11,18 @@ const Keyboard = () => {
       <KeyBoardRow keys={["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"]} />
       <KeyBoardRow keys={["a", "s", "d", "f", "g", "h", "j", "k", "l"]} />
       <div className="flex items-center">
-        <div className="h-12 w-16 border hover:cursor-pointer select-none mx-0.5" onClick={() => submitGuess()}>
+        <div
+          className="h-12 w-16 bg-gray-200 rounded-lg hover:cursor-pointer select-none m-0.5 flex justify-center items-center font-semibold"
+          onClick={() => submitGuess()}
+        >
           Enter
         </div>
         <KeyBoardRow keys={["z", "x", "c", "v", "b", "n", "m"]} />
-        <div className="h-12 w-16 border hover:cursor-pointer select-none mx-0.5" onClick={() => deleteLetter()}>
-          Delete
+        <div
+          className="h-12 w-16 bg-gray-200 rounded-lg hover:cursor-pointer select-none m-0.5 flex justify-center items-center"
+          onClick={() => deleteLetter()}
+        >
+          <Image src={"backspace.svg"} alt="Backspace" width={25} height={25} className="mr-0.5" /> 
         </div>
       </div>
     </div>

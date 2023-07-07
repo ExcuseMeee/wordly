@@ -8,7 +8,6 @@ const Grid = () => {
   const { board, gameFinished, resetWordly, setModalOpen } = useWordly();
   const modalRef = useRef<HTMLDialogElement>(null);
   useEffect(() => {
-    console.log("ran");
     if (gameFinished) {
       modalRef.current?.showModal();
       setModalOpen(true);
@@ -16,7 +15,7 @@ const Grid = () => {
   }, [gameFinished]);
 
   return (
-    <div className="flex justify-center border border-black">
+    <div className="flex justify-center">
       <div>
         {board.map((row, i) => (
           <Row key={i} rowData={row} />
@@ -24,7 +23,7 @@ const Grid = () => {
       </div>
       <dialog
         ref={modalRef}
-        className="focus:outline-none"
+        className="focus:outline-none rounded-md"
         onClose={() => resetWordly()}
       >
         <GameOver modalRef={modalRef} />

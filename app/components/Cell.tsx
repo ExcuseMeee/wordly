@@ -14,9 +14,10 @@ const Cell = ({ cellData }: ComponentProps) => {
       ? "bg-gray-500"
       : "bg-none";
 
+  const cellBorder = cellData.letter ? "border-black" : "";
   return (
     <div
-      className={`border w-14 h-14 m-0.5 flex justify-center items-center font-bold select-none ${cellColor}`}
+      className={`border-2 ${cellBorder} w-14 h-14 m-0.5 flex justify-center items-center font-bold select-none ${cellColor}`}
     >
       {cellData.letter.toUpperCase()}
     </div>
