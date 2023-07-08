@@ -5,7 +5,7 @@
 
 :root{
   --delay: 0ms;
-  --duration: 0s;
+  --duration: 0ms;
 }
 
 .animate {

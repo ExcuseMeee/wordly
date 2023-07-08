@@ -18,14 +18,12 @@ type ContextTypes = {
   gameFinished: boolean;
   resetWordly: Function;
   solved: boolean;
-  setModalOpen: Function;
+  currentTurn: number;
 };
-
 export type CellData = {
   letter: string;
   state: CellState;
 };
-
 type CellState = "None" | "Incorrect" | "Close" | "Correct";
 
 const WordlyContext = createContext<ContextTypes>(null!);
@@ -48,7 +46,6 @@ export const WordlyContextProvider = ({
   const [currentPosition, setCurrentPosition] = useState(0);
   const [solved, setSolved] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
   const usedLetters = useRef<Map<string, CellState>>(new Map());
 
   // fetch word on first render
@@ -72,7 +69,7 @@ export const WordlyContextProvider = ({
     };
   }, [keyHandler]);
   function keyHandler(event: KeyboardEvent) {
-    if (modalOpen || gameFinished) return;
+    if (gameFinished) return;
     if (event.key === "Backspace") {
       deleteLetter();
     } else if (event.key === "Enter") {
@@ -86,7 +83,6 @@ export const WordlyContextProvider = ({
 
   // win or lose check
   useEffect(() => {
-    console.log("useeffect called");
     if (currentTurn > 5 && !solved) {
       console.log("wordly not solved");
       setGameFinished(true);
@@ -115,7 +111,7 @@ export const WordlyContextProvider = ({
     setCurrentPosition((currentPosition) => currentPosition - 1);
   }
   function addLetter(key: string) {
-    if (currentPosition === 5 || currentTurn === 6) return;
+    if (currentPosition === 5 || currentTurn === 6 || gameFinished) return;
     updateBoard(key, currentTurn, currentPosition);
     setCurrentPosition((currentPosition) => currentPosition + 1);
   }
@@ -149,7 +145,6 @@ export const WordlyContextProvider = ({
     usedLetters.current.clear();
     setSolved(false);
     setGameFinished(false);
-    setModalOpen(false);
   }
 
   // ----------------------WORD CHECKING----------------------
@@ -223,7 +218,7 @@ export const WordlyContextProvider = ({
         gameFinished,
         resetWordly,
         solved,
-        setModalOpen,
+        currentTurn
       }}
     >
       {children}

@@ -4,13 +4,24 @@ import { useWordly } from "../context/WordlyContext";
 import Row from "./Row";
 import GameOver from "./GameOver";
 
-const Grid = () => {
-  const { board, gameFinished, resetWordly, setModalOpen } = useWordly();
+type ComponentProps = {
+  animationTiming: {
+    delay: number;
+    duration: number;
+  };
+};
+
+const Grid = ({ animationTiming }: ComponentProps) => {
+  const { board, gameFinished, resetWordly } = useWordly();
+  const { delay, duration } = animationTiming;
+
   const modalRef = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
     if (gameFinished) {
-      modalRef.current?.showModal();
-      setModalOpen(true);
+      setTimeout(() => {
+        modalRef.current?.showModal();
+      }, 4 * delay + duration + 100); // add 100ms offset
     }
   }, [gameFinished]);
 
@@ -18,7 +29,7 @@ const Grid = () => {
     <div className="flex justify-center">
       <div>
         {board.map((row, i) => (
-          <Row key={i} rowData={row} />
+          <Row key={i} rowData={row} animationTiming={animationTiming} />
         ))}
       </div>
       <dialog

@@ -4,27 +4,31 @@ import { CellData } from "../context/WordlyContext";
 type ComponentProps = {
   cellData: CellData;
   index: number;
+  animationTiming: {
+    delay: number;
+    duration: number;
+  };
 };
 
-const Cell = ({ cellData, index }: ComponentProps) => {
+const Cell = ({ cellData, index, animationTiming }: ComponentProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  const delay = index * 400; //ms
-  const duration = 0.8; //s
+  const { delay, duration } = animationTiming;
+  const delay_ = index * delay;
 
   switch (cellData.state) {
     case "Correct":
-      ref.current?.style.setProperty("--delay", `${delay}ms`);
-      ref.current?.style.setProperty("--duration", `${duration}s`);
+      ref.current?.style.setProperty("--delay", `${delay_}ms`);
+      ref.current?.style.setProperty("--duration", `${duration}ms`);
       ref.current?.classList.add("animate");
       break;
     case "Close":
-      ref.current?.style.setProperty("--delay", `${delay}ms`);
-      ref.current?.style.setProperty("--duration", `${duration}s`);
+      ref.current?.style.setProperty("--delay", `${delay_}ms`);
+      ref.current?.style.setProperty("--duration", `${duration}ms`);
       ref.current?.classList.add("animate");
       break;
     case "Incorrect":
-      ref.current?.style.setProperty("--delay", `${delay}ms`);
-      ref.current?.style.setProperty("--duration", `${duration}s`);
+      ref.current?.style.setProperty("--delay", `${delay_}ms`);
+      ref.current?.style.setProperty("--duration", `${duration}ms`);
       ref.current?.classList.add("animate");
       break;
     default:
@@ -39,7 +43,7 @@ const Cell = ({ cellData, index }: ComponentProps) => {
       : cellData.state === "Incorrect"
       ? ref.current?.classList.add("bg-gray-500")
       : ref.current?.classList.add("bg-none");
-  }, (delay + (duration * 500)));
+  }, delay_ + duration / 2);
 
   const cellBorder = cellData.letter ? "border-black" : "";
   return (

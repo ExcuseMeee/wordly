@@ -1,22 +1,39 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useWordly } from "../context/WordlyContext";
 
 type ComponentProps = {
   key_: string;
+  animationTiming: {
+    delay: number;
+    duration: number;
+  };
 };
 
-const Key = ({ key_ }: ComponentProps) => {
-  const { addLetter, usedLetters } = useWordly();
+const Key = ({ key_, animationTiming }: ComponentProps) => {
+  const { addLetter, usedLetters, currentTurn } = useWordly();
+  const { delay, duration } = animationTiming;
 
   const cellState = usedLetters.current.get(key_);
-  const keyColor =
-    cellState === "Correct"
-      ? "bg-green-500"
-      : cellState === "Close"
-      ? "bg-yellow-500"
-      : cellState === "Incorrect"
-      ? "bg-gray-500"
-      : "bg-gray-200";
+
+  const [keyColor, setKeyColor] = useState("bg-gray-200");
+  useEffect(() => {
+    if (currentTurn === 0) {
+      setKeyColor("bg-gray-200");
+      return;
+    }
+    setTimeout(() => {
+      const color =
+        cellState === "Correct"
+          ? "bg-green-500"
+          : cellState === "Close"
+          ? "bg-yellow-500"
+          : cellState === "Incorrect"
+          ? "bg-gray-500"
+          : "bg-gray-200";
+      setKeyColor(color);
+    }, 4 * delay + duration);
+  }, [currentTurn]);
 
   return (
     <div
