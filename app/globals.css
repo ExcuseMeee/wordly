@@ -1,3 +1,27 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root{
+  --delay: 0ms;
+  --duration: 0s;
+}
+
+.animate {
+  animation: flip var(--duration) ease var(--delay);
+}
+
+@keyframes flip {
+  0%{
+    transform: scaleY(1);
+  }
+  50%{
+    transform: scaleY(0);
+  }
+  100%{
+    transform: scaleY(1);
+  }
+
+}
+

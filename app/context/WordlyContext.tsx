@@ -72,7 +72,7 @@ export const WordlyContextProvider = ({
     };
   }, [keyHandler]);
   function keyHandler(event: KeyboardEvent) {
-    if (modalOpen) return;
+    if (modalOpen || gameFinished) return;
     if (event.key === "Backspace") {
       deleteLetter();
     } else if (event.key === "Enter") {
@@ -86,6 +86,7 @@ export const WordlyContextProvider = ({
 
   // win or lose check
   useEffect(() => {
+    console.log("useeffect called");
     if (currentTurn > 5 && !solved) {
       console.log("wordly not solved");
       setGameFinished(true);

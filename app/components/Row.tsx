@@ -8,7 +8,7 @@ const Row = ({ rowData }: ComponentProps) => {
   return (
     <div className="flex">
       {rowData.map((cellData, i)=>(
-        <Cell key={i} cellData={cellData} />
+        <Cell key={i} cellData={cellData} index={i} />
       ))}
     </div>
   );
