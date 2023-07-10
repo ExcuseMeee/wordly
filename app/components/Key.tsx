@@ -1,13 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useWordly } from "../context/WordlyContext";
+import { AnimationTiming } from "../page";
 
 type ComponentProps = {
   key_: string;
-  animationTiming: {
-    delay: number;
-    duration: number;
-  };
+  animationTiming: AnimationTiming;
 };
 
 const Key = ({ key_, animationTiming }: ComponentProps) => {

@@ -1,12 +1,21 @@
 import Grid from "./components/Grid";
 import Keyboard from "./components/Keyboard";
 
+// timing in millisec
+export type AnimationTiming = {
+  delay: number;
+  duration: number;
+  shudderDuration: number;
+}
+
 export default async function Home() {
 
-  // timing in millisec, total time to flip all cells is 4*delay + duration
-  const animationTiming = {
+  const animationTiming: AnimationTiming = {
+    // cell flipping, total time to flip all cells is 4*delay + duration
     delay: 400,
     duration: 800,
+    // shaking duration
+    shudderDuration: 300,
   }
 
   return (

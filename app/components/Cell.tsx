@@ -1,13 +1,11 @@
 import { useRef } from "react";
 import { CellData } from "../context/WordlyContext";
+import { AnimationTiming } from "../page";
 
 type ComponentProps = {
   cellData: CellData;
   index: number;
-  animationTiming: {
-    delay: number;
-    duration: number;
-  };
+  animationTiming: AnimationTiming;
 };
 
 const Cell = ({ cellData, index, animationTiming }: ComponentProps) => {

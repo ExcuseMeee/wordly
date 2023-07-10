@@ -2,12 +2,10 @@
 import Image from "next/image";
 import { useWordly } from "../context/WordlyContext";
 import KeyBoardRow from "./KeyBoardRow";
+import { AnimationTiming } from "../page";
 
 type ComponentProps = {
-  animationTiming: {
-    delay: number;
-    duration: number;
-  };
+  animationTiming: AnimationTiming;
 };
 
 const Keyboard = ({ animationTiming }: ComponentProps) => {

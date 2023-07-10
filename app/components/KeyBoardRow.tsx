@@ -1,11 +1,9 @@
+import { AnimationTiming } from "../page";
 import Key from "./Key";
 
 type ComponentProps = {
   keys: string[];
-  animationTiming: {
-    delay: number;
-    duration: number;
-  };
+  animationTiming: AnimationTiming;
 };
 
 const KeyBoardRow = ({ keys, animationTiming }: ComponentProps) => {

@@ -6,10 +6,15 @@
 :root{
   --delay: 0ms;
   --duration: 0ms;
+  --shudderDuration: 0ms;
 }
 
 .animate {
   animation: flip var(--duration) ease var(--delay);
+}
+
+.animate-shake {
+  animation: horizontal-shaking var(--shudderDuration) ease;
 }
 
 @keyframes flip {
@@ -24,4 +29,12 @@
   }
 
 }
+
+@keyframes horizontal-shaking {
+  0% { transform: translateX(0) }
+  25% { transform: translateX(5px) }
+  50% { transform: translateX(-5px) }
+  75% { transform: translateX(5px) }
+  100% { transform: translateX(0) }
+ }
 

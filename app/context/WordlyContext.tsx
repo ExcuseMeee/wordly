@@ -19,6 +19,8 @@ type ContextTypes = {
   resetWordly: Function;
   solved: boolean;
   currentTurn: number;
+  shudder: boolean;
+  setShudder: Function;
 };
 export type CellData = {
   letter: string;
@@ -47,6 +49,8 @@ export const WordlyContextProvider = ({
   const [solved, setSolved] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
   const usedLetters = useRef<Map<string, CellState>>(new Map());
+  
+  const [shudder, setShudder] = useState<boolean>(false)
 
   // fetch word on first render
   useEffect(() => {
@@ -200,9 +204,11 @@ export const WordlyContextProvider = ({
     });
     if (res.status === 500) {
       console.log("Word search failed");
+      setShudder(true)
       return false;
     }
     const doesExist: boolean = await res.json();
+    setShudder(!doesExist)
     return doesExist;
   }
 
@@ -218,7 +224,9 @@ export const WordlyContextProvider = ({
         gameFinished,
         resetWordly,
         solved,
-        currentTurn
+        currentTurn,
+        shudder,
+        setShudder
       }}
     >
       {children}
