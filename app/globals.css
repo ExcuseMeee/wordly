@@ -7,14 +7,19 @@
   --delay: 0ms;
   --duration: 0ms;
   --shudderDuration: 0ms;
+  --pulseDuration: 0ms;
 }
 
-.animate {
+.flip {
   animation: flip var(--duration) ease var(--delay);
 }
 
 .animate-shake {
   animation: horizontal-shaking var(--shudderDuration) ease;
+}
+
+.pulse{
+  animation: pulse var(--pulseDuration) ease;
 }
 
 @keyframes flip {
@@ -36,5 +41,16 @@
   50% { transform: translateX(-5px) }
   75% { transform: translateX(5px) }
   100% { transform: translateX(0) }
- }
+}
 
+@keyframes pulse {
+  0% {
+    transform: scale(1)
+  }
+  50% {
+    transform: scale(1.1)
+  }
+  100% {
+    transform: scale(1)
+  }
+}

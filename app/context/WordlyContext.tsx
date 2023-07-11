@@ -19,6 +19,7 @@ type ContextTypes = {
   resetWordly: Function;
   solved: boolean;
   currentTurn: number;
+  currentPosition: number;
   shudder: boolean;
   setShudder: Function;
 };
@@ -226,7 +227,8 @@ export const WordlyContextProvider = ({
         solved,
         currentTurn,
         shudder,
-        setShudder
+        setShudder,
+        currentPosition
       }}
     >
       {children}

@@ -10,7 +10,7 @@ type ComponentProps = {
 
 const Key = ({ key_, animationTiming }: ComponentProps) => {
   const { addLetter, usedLetters, currentTurn } = useWordly();
-  const { delay, duration } = animationTiming;
+  const { flipDelay, flipDuration } = animationTiming;
 
   const cellState = usedLetters.current.get(key_);
 
@@ -30,7 +30,7 @@ const Key = ({ key_, animationTiming }: ComponentProps) => {
           ? "bg-gray-500"
           : "bg-gray-200";
       setKeyColor(color);
-    }, 4 * delay + duration);
+    }, 4 * flipDelay + flipDuration);
   }, [currentTurn]);
 
   return (

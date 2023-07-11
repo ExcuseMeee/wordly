@@ -3,19 +3,19 @@ import Keyboard from "./components/Keyboard";
 
 // timing in millisec
 export type AnimationTiming = {
-  delay: number;
-  duration: number;
+  flipDelay: number;
+  flipDuration: number;
   shudderDuration: number;
+  pulseDuration: number;
 }
 
 export default async function Home() {
 
   const animationTiming: AnimationTiming = {
-    // cell flipping, total time to flip all cells is 4*delay + duration
-    delay: 400,
-    duration: 800,
-    // shaking duration
+    flipDelay: 400,
+    flipDuration: 800, // total time to flip all cells is 4*flipDelay + flipDuration
     shudderDuration: 300,
+    pulseDuration: 100
   }
 
   return (

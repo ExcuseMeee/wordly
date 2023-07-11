@@ -11,7 +11,7 @@ type ComponentProps = {
 
 const Grid = ({ animationTiming }: ComponentProps) => {
   const { board, gameFinished, resetWordly } = useWordly();
-  const { delay, duration } = animationTiming;
+  const { flipDelay, flipDuration } = animationTiming;
 
   const modalRef = useRef<HTMLDialogElement>(null);
 
@@ -19,7 +19,7 @@ const Grid = ({ animationTiming }: ComponentProps) => {
     if (gameFinished) {
       setTimeout(() => {
         modalRef.current?.showModal();
-      }, 4 * delay + duration + 100); // add 100ms offset for more pleasant timing
+      }, 4 * flipDelay + flipDuration + 100); // add 100ms offset for more pleasant timing
     }
   }, [gameFinished]);
 
