@@ -14,10 +14,10 @@ const Key = ({ key_, animationTiming }: ComponentProps) => {
 
   const cellState = usedLetters.current.get(key_);
 
-  const [keyColor, setKeyColor] = useState("bg-gray-200");
+  const [keyColor, setKeyColor] = useState("bg-[#818384]");
   useEffect(() => {
     if (currentTurn === 0) {
-      setKeyColor("bg-gray-200");
+      setKeyColor("bg-[#818384]");
       return;
     }
     setTimeout(() => {
@@ -27,15 +27,15 @@ const Key = ({ key_, animationTiming }: ComponentProps) => {
           : cellState === "Close"
           ? "bg-yellow-500"
           : cellState === "Incorrect"
-          ? "bg-gray-500"
-          : "bg-gray-200";
+          ? "bg-zinc-700"
+          : "bg-[#818384]";
       setKeyColor(color);
     }, 4 * flipDelay + flipDuration);
   }, [currentTurn]);
 
   return (
     <div
-      className={`${keyColor} rounded-lg w-10 h-12 hover:cursor-pointer flex justify-center items-center select-none m-0.5 font-bold`}
+      className={`${keyColor} rounded-lg w-10 h-12 hover:cursor-pointer flex justify-center items-center select-none m-0.5 font-bold text-white`}
       onClick={() => {
         addLetter(key_);
       }}

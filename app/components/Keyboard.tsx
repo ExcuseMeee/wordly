@@ -17,14 +17,14 @@ const Keyboard = ({ animationTiming }: ComponentProps) => {
       <KeyBoardRow keys={["a", "s", "d", "f", "g", "h", "j", "k", "l"]} animationTiming={animationTiming} />
       <div className="flex items-center">
         <div
-          className="h-12 w-16 bg-gray-200 rounded-lg hover:cursor-pointer select-none m-0.5 flex justify-center items-center font-semibold"
+          className="h-12 w-16 bg-[#818384] rounded-lg hover:cursor-pointer select-none m-0.5 flex justify-center items-center font-semibold text-white"
           onClick={() => submitGuess()}
         >
           Enter
         </div>
         <KeyBoardRow keys={["z", "x", "c", "v", "b", "n", "m"]} animationTiming={animationTiming} />
         <div
-          className="h-12 w-16 bg-gray-200 rounded-lg hover:cursor-pointer select-none m-0.5 flex justify-center items-center"
+          className="h-12 w-16 bg-[#818384] rounded-lg hover:cursor-pointer select-none m-0.5 flex justify-center items-center"
           onClick={() => deleteLetter()}
         >
           <Image

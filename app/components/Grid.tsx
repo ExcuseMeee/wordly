@@ -32,7 +32,7 @@ const Grid = ({ animationTiming }: ComponentProps) => {
       </div>
       <dialog
         ref={modalRef}
-        className="focus:outline-none rounded-md"
+        className="focus:outline-none rounded-md bg-neutral-600 text-white"
         onClose={() => resetWordly()}
       >
         <GameOver modalRef={modalRef} />

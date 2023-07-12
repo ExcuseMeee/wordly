@@ -1,5 +1,5 @@
 const Navbar = () => {
-  return <nav className="flex justify-center border">Wordly</nav>;
+  return <nav className="flex justify-center border text-white">Wordly</nav>;
 };
 
 export default Navbar;
