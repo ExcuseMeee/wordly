@@ -8,7 +8,7 @@ type ComponentProps = {
 
 const KeyBoardRow = ({ keys, animationTiming }: ComponentProps) => {
   return (
-    <div className="flex">
+    <div className="w-full flex justify-center items-center ">
       {keys.map((key_, i) => (
         <Key key={i} key_={key_} animationTiming={animationTiming} />
       ))}
