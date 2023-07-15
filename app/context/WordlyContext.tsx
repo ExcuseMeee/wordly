@@ -50,8 +50,8 @@ export const WordlyContextProvider = ({
   const [solved, setSolved] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
   const usedLetters = useRef<Map<string, CellState>>(new Map());
-  
-  const [shudder, setShudder] = useState<boolean>(false)
+
+  const [shudder, setShudder] = useState<boolean>(false);
 
   // fetch word on first render
   useEffect(() => {
@@ -89,13 +89,9 @@ export const WordlyContextProvider = ({
   // win or lose check
   useEffect(() => {
     if (currentTurn > 5 && !solved) {
-      console.log("wordly not solved");
       setGameFinished(true);
-      // resetWordly();
     } else if (solved) {
-      console.log("wordly solved");
       setGameFinished(true);
-      // resetWordly();
     }
   }, [solved, currentTurn]);
 
@@ -125,7 +121,6 @@ export const WordlyContextProvider = ({
     usedLetters.current.set(letter, cellState);
   }
   function resetWordly() {
-    console.log("resetting...");
     fetch("/api")
       .then((res) => {
         return res.json();
@@ -156,10 +151,7 @@ export const WordlyContextProvider = ({
   async function submitGuess() {
     if (currentPosition !== 5) return;
     let currentGuess = board.at(currentTurn)!;
-    if (!(await wordExists(currentGuess))) {
-      console.log("word dne");
-      return;
-    }
+    if (!(await wordExists(currentGuess))) return;
     const tempBoard: CellData[][] = board.map((row) =>
       row.map((cell) => ({ ...cell }))
     );
@@ -204,12 +196,12 @@ export const WordlyContextProvider = ({
       body: guessString,
     });
     if (res.status === 500) {
-      console.log("Word search failed");
-      setShudder(true)
+      console.error("Word search failed");
+      setShudder(true);
       return false;
     }
     const doesExist: boolean = await res.json();
-    setShudder(!doesExist)
+    setShudder(!doesExist);
     return doesExist;
   }
 
@@ -228,7 +220,7 @@ export const WordlyContextProvider = ({
         currentTurn,
         shudder,
         setShudder,
-        currentPosition
+        currentPosition,
       }}
     >
       {children}
