@@ -30,7 +30,7 @@ const Row = ({ rowData, animationTiming, rowIndex }: ComponentProps) => {
   }, [shudder]);
 
   return (
-    <div className="flex" ref={ref}>
+    <div className="flex w-fit justify-center" ref={ref}>
       {rowData.map((cellData, i) => (
         <Cell
           key={i}

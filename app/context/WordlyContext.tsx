@@ -60,7 +60,6 @@ export const WordlyContextProvider = ({
         return res.json();
       })
       .then((word: string) => {
-        console.log(word);
         setWord(word);
       });
   }, []);
@@ -126,7 +125,6 @@ export const WordlyContextProvider = ({
         return res.json();
       })
       .then((word: string) => {
-        console.log(word);
         setWord(word);
       });
     resetStates();

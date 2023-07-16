@@ -16,10 +16,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-neutral-900 h-screen flex flex-col">
         <WordlyContextProvider>
-          <div className="h-[7%]">
+          <div className="h-[10%]">
             <Navbar />
           </div>
-          <div className="h-[93%]">{children}</div>
+          <div className="h-[90%]">{children}</div>
         </WordlyContextProvider>
       </body>
     </html>

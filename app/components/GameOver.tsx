@@ -12,7 +12,7 @@ const GameOver = ({ modalRef }: ComponentProps) => {
 
   return (
     <div className="w-56 h-56 flex flex-col justify-evenly">
-      <div className="grid place-items-center">
+      <div className="grid place-items-center select-none">
         {solved ? (
           <Image src={"checkmark.svg"} alt="checkmark" width={50} height={50} />
         ) : (
@@ -36,7 +36,7 @@ const GameOver = ({ modalRef }: ComponentProps) => {
       </div>
       <button
         onClick={() => modalRef.current?.close()}
-        className="focus:outline-none border-2 w-1/2 rounded-lg mx-auto mt-2 p-2 hover:text-red-500 hover:border-red-500"
+        className="focus:outline-none border-2 w-5/12 rounded-lg mx-auto mt-2 p-2 hover:text-red-500 hover:border-red-500 select-none font-semibold"
       >
         Close
       </button>

@@ -40,7 +40,7 @@ const Cell = ({ cellData, index, animationTiming }: ComponentProps) => {
     setPulse(true);
   }, [cellData.letter]);
 
-  // play flipping animation when cellData.state changes
+  // play flipping animation and color cells when cellData.state changes
   // cellData.state changes when (1): board is reset (2): user has submitted a valid guess
   useEffect(() => {
     // reset cell color and border when board is reset, and prevent flipping animation

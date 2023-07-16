@@ -24,10 +24,15 @@ const Grid = ({ animationTiming }: ComponentProps) => {
   }, [gameFinished]);
 
   return (
-    <div className="flex justify-center">
-      <div>
+    <>
+      <div className="flex flex-col items-center justify-center">
         {board.map((row, i) => (
-          <Row key={i} rowData={row} animationTiming={animationTiming} rowIndex={i} />
+          <Row
+            key={i}
+            rowData={row}
+            animationTiming={animationTiming}
+            rowIndex={i}
+          />
         ))}
       </div>
       <dialog
@@ -37,7 +42,7 @@ const Grid = ({ animationTiming }: ComponentProps) => {
       >
         <GameOver modalRef={modalRef} />
       </dialog>
-    </div>
+    </>
   );
 };
 
