@@ -51,6 +51,8 @@ export const WordlyContextProvider = ({
   const [gameFinished, setGameFinished] = useState(false);
   const usedLetters = useRef<Map<string, CellState>>(new Map());
 
+  const [isFetching, setIsFetching] = useState(false); // prevent actions when api call is in progress (for slow internet)
+
   const [shudder, setShudder] = useState<boolean>(false);
 
   // fetch word on first render
@@ -73,7 +75,7 @@ export const WordlyContextProvider = ({
     };
   }, [keyHandler]);
   function keyHandler(event: KeyboardEvent) {
-    if (gameFinished) return;
+    if (gameFinished || isFetching) return;
     if (event.key === "Backspace") {
       deleteLetter();
     } else if (event.key === "Enter") {
@@ -106,11 +108,13 @@ export const WordlyContextProvider = ({
     setBoard(tempBoard);
   }
   function deleteLetter() {
+    if (isFetching) return;
     if (currentPosition === 0) return;
     updateBoard("", currentTurn, currentPosition - 1);
     setCurrentPosition((currentPosition) => currentPosition - 1);
   }
   function addLetter(key: string) {
+    if (isFetching) return;
     if (currentPosition === 5 || currentTurn === 6 || gameFinished) return;
     updateBoard(key, currentTurn, currentPosition);
     setCurrentPosition((currentPosition) => currentPosition + 1);
@@ -147,7 +151,8 @@ export const WordlyContextProvider = ({
 
   // ----------------------WORD CHECKING----------------------
   async function submitGuess() {
-    if (currentPosition !== 5) return;
+    if (isFetching) return;
+    if (currentPosition !== 5) return; // don't submit unless 5 letters are entered
     let currentGuess = board.at(currentTurn)!;
     if (!(await wordExists(currentGuess))) return;
     const tempBoard: CellData[][] = board.map((row) =>
@@ -160,6 +165,9 @@ export const WordlyContextProvider = ({
     setCurrentPosition(0);
     setSolved(solved);
   }
+  // map through each letter of submitted guess to determine if each letter is Correct, Close, or Incorrect.
+  // returns array of cellData with cellState updated to match results
+  // returns whether the wordly is solved or not
   function check(
     guess: CellData[],
     word: string
@@ -167,6 +175,7 @@ export const WordlyContextProvider = ({
     let solved = true;
     let returnArr: CellData[] = [];
     const wordArr: string[] = word.trim().toLowerCase().split("");
+
     guess.forEach((cell, i) => {
       const guessLetter = cell.letter.toLowerCase();
       const wordLetter = wordArr.at(i);
@@ -185,9 +194,13 @@ export const WordlyContextProvider = ({
       updateUsedLetters(guessLetter, cellState);
       if (guessLetter !== wordLetter) solved = false;
     });
+
     return { returnArr, solved };
   }
+  // api call to search word banks for submitted guess
+  // updates isFetching state to prevent multiple submits while api is being called
   async function wordExists(guess: CellData[]): Promise<boolean> {
+    setIsFetching(true);
     let guessString: string = guess.map((cell) => cell.letter).join("");
     const res = await fetch("/api", {
       method: "POST",
@@ -196,9 +209,11 @@ export const WordlyContextProvider = ({
     if (res.status === 500) {
       console.error("Word search failed");
       setShudder(true);
+      setIsFetching(false);
       return false;
     }
     const doesExist: boolean = await res.json();
+    setIsFetching(false);
     setShudder(!doesExist);
     return doesExist;
   }
