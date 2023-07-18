@@ -57,12 +57,14 @@ export const WordlyContextProvider = ({
 
   // fetch word on first render
   useEffect(() => {
+    setIsFetching(true);
     fetch("/api")
       .then((res) => {
         return res.json();
       })
       .then((word: string) => {
         setWord(word);
+        setIsFetching(false);
       });
   }, []);
 
@@ -82,8 +84,6 @@ export const WordlyContextProvider = ({
       submitGuess();
     } else if (/^[A-Za-z]$/.test(event.key)) {
       addLetter(event.key);
-    } else {
-      console.log("invalid keystroke", event.key);
     }
   }
 
@@ -124,14 +124,16 @@ export const WordlyContextProvider = ({
     usedLetters.current.set(letter, cellState);
   }
   function resetWordly() {
+    setIsFetching(true)
     fetch("/api")
       .then((res) => {
         return res.json();
       })
       .then((word: string) => {
         setWord(word);
+        setIsFetching(false)
       });
-    resetStates();
+      resetStates();
   }
   function resetStates() {
     setBoard(
